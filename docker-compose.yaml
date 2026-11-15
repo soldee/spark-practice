@@ -1,0 +1,62 @@
+x-spark-base: &spark-base
+  build: .
+  image: spark-yarn-local:latest
+
+services:
+  namenode:
+    <<: *spark-base
+    container_name: namenode
+    hostname: namenode
+    command: ["namenode"]
+    ports:
+      - "9870:9870"   # HDFS NameNode UI
+      - "9000:9000"
+    volumes:
+      - namenode-data:/data/hdfs/namenode
+
+  datanode:
+    <<: *spark-base
+    container_name: datanode
+    hostname: datanode
+    command: ["datanode"]
+    depends_on:
+      - namenode
+    volumes:
+      - datanode-data:/data/hdfs/datanode
+
+  resourcemanager:
+    <<: *spark-base
+    container_name: resourcemanager
+    hostname: resourcemanager
+    command: ["resourcemanager"]
+    ports:
+      - "8088:8088"   # YARN ResourceManager UI
+    depends_on:
+      - namenode
+      - datanode
+
+  nodemanager:
+    <<: *spark-base
+    command: ["nodemanager"]
+    depends_on:
+      - resourcemanager
+
+  spark-client:
+    <<: *spark-base
+    container_name: spark-client
+    hostname: spark-client
+    command: ["client"]
+    ports:
+      - "18080:18080" # Spark History Server UI
+      - "4040:4040"   # Active Spark Driver UI (client mode)
+    volumes:
+      - ./workspace:/workspace
+    depends_on:
+      - namenode
+      - datanode
+      - resourcemanager
+      - nodemanager
+
+volumes:
+  namenode-data:
+  datanode-data:
