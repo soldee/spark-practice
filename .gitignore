@@ -1,0 +1,15 @@
+# Spark / Hive / Derby runtime artifacts
+derby.log
+metastore_db/
+spark-warehouse/
+
+# Scala / sbt build outputs
+target/
+.bsp/
+.bloop/
+.metals/
+
+# Python artifacts
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
