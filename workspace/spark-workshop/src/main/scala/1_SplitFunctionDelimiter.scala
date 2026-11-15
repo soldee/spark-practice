@@ -8,6 +8,7 @@ val dept = Seq(
   ("1$", "$"),
   ("1000.00^Test_string", "^")).toDF("VALUES", "Delimiter")
 */
+package workshop.sql
 
 import org.apache.spark.sql.functions._
 import org.apache.spark.sql.SparkSession
@@ -27,6 +28,13 @@ object SplitFunctionDelimiter {
         ("1$", "$"),
         ("1000.00^Test_string", "^")).toDF("VALUES", "Delimiter")
 
-        dept.select($"values", $"delimiter", split($"values", $"delimiter")).show()
+        dept.withColumn("split_values", split($"values", $"delimiter")).show()
+
+        dept.createOrReplaceTempView("dept")
+
+        val dept_split_df = spark.sql("select values, delimiter, split(values, delimiter) as split_values from dept")
+
+        // EXTRA
+        dept_split_df.withColumn("extra", array_remove($"split_values", "")).show()
     }
 }

@@ -8,8 +8,11 @@ target/
 .bsp/
 .bloop/
 .metals/
+project/
 
 # Python artifacts
 __pycache__/
 *.py[cod]
 .ipynb_checkpoints/
+
+.vscode
