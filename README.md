@@ -1,3 +1,6 @@
+# spark-practice
+
+Some exercises for practicing Apache Spark on a Yarn cluster.
 
 ## Launch and Run Jobs on YARN
 
