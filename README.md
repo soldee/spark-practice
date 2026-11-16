@@ -39,3 +39,9 @@ Spark History Server: http://localhost:18080
 ```bash
 docker exec spark-client yarn logs -applicationId application_1794746533678_0003 -log_files stdout
 ```
+
+6. Upload files to HDFS
+For the exercises that read data from the data directory, we upload them to HDFS so that they are accessible to the cluster:
+```bash
+docker exec -it spark-client hdfs dfs -put -f /workspace/spark-workshop/data /
+```
