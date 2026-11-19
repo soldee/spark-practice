@@ -1,5 +1,5 @@
 /* 
-Develop a standalone Spark SQL application (using IntelliJ IDEA) that finds the ids of the rows that have values of one column in an array column.
+Develop a standalone Spark SQL application that finds the ids of the rows that have values of one column in an array column.
 
 input:
     +---+------------------+-----+
@@ -44,10 +44,27 @@ object FindingsIdsOfWords {
         .option("inferSchema", true) // will assume id is int
         .csv("/data/10.csv")
 
-        input.withColumn("words", split($"words", ",")).show(truncate=false)
-
-        val wordSet = input.select("word").distinct().collect().map(row => row.getAs[String](0))
+        val allIds = input
+        .withColumn("w", explode(split($"words", ",")))
+        .groupBy("w").agg(
+            sort_array(collect_set("id")).as("id")
+        )
         
+        allIds.show(truncate=false)
+
+        val target_words = input
+        .select($"word".as("target_word"))
+        .distinct()
+
+        target_words
+        .join(
+            allIds,
+            $"target_word" === $"w",
+            "inner"
+        )
+        .select("w", "id")
+        .orderBy($"w")
+        .show(truncate=false)
 
     }
 }

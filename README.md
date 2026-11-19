@@ -45,3 +45,9 @@ For the exercises that read data from the data directory, we upload them to HDFS
 ```bash
 docker exec -it spark-client hdfs dfs -put -f /workspace/spark-workshop/data /
 ```
+
+7. Compiling project locally
+If you are using `Metals` extension, you can compile locally by changing the build server to sbt and then running:
+```bash
+java -jar .bsp/sbt-launch.jar --client package
+```
